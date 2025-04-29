@@ -29,41 +29,40 @@ public class ArrayQueue implements Queue {
 
     @Override
     public int indexOf(Object element) throws QueueException {
-        ArrayQueue aux=new ArrayQueue(size());
-        int index=front+1;
         if (isEmpty()) throw new QueueException("Queue is empty");
-        if (peek()==element) return index;
-        while(queue[index]!=element) {
-            aux.enQueue(deQueue());
-            index++;
-        }
+        ArrayQueue aux = new ArrayQueue(n);
+        int index = 0;
+        int foundedIndex = -1;//-1 si el indice no fue encontrado
+
         while (!isEmpty()) {
-            aux.enQueue(deQueue());
+            Object current = deQueue();//se guarda en una variable para comparar
+            if (foundedIndex == -1 && current.equals(element)) {
+                foundedIndex = index;
+            }
+            aux.enQueue(current);
+            index++;
         }
         while (!aux.isEmpty()) {
             enQueue(aux.deQueue());
         }
-        return index;
+
+        return foundedIndex;
     }
 
     @Override
     public void enQueue(Object element) throws QueueException {
-        if (size()==n)
+        if (size() == n)
             throw new QueueException("Queue is full");
+
         if (isEmpty()) {
-            front = rear = (this.n-1);
             queue[rear] = element;
             front--;
-        }
-        else {
-            if (size()<n){
-                for (int i=rear; i<front; i--){
-                    Object temp =queue[i];
-                    queue[rear]=element;
-                    queue[i-1]=temp;
-                }
-                front--;
+        } else {
+            for (int i = front + 1; i <= rear; i++) {
+                queue[i - 1] = queue[i];
             }
+            queue[rear] = element;
+            front--;
         }
     }
 
@@ -76,16 +75,21 @@ public class ArrayQueue implements Queue {
     @Override
     public boolean contains(Object element) throws QueueException {
         if (isEmpty()) throw new QueueException("Queue is empty");
-        boolean found=false;
-        ArrayQueue aux=new ArrayQueue(size());
-        while(!isEmpty()) {
-            aux.enQueue(deQueue());//traspasa elemento a elemento hacia la cola auxiliar,
-            //para comparar si existe el elemento buscado
-            if (aux.peek().equals(element)) found=true;
+
+        boolean found = false;
+        ArrayQueue aux = new ArrayQueue(n);
+
+        while (!isEmpty()) {
+            Object current = deQueue();//guardo en una variable para evaluar
+            if (!found && current.equals(element)) {
+                found = true;
+            }
+            aux.enQueue(current);
         }
         while (!aux.isEmpty()) {
-            enQueue(aux.deQueue());//devuelve la cola a su estado original
+            enQueue(aux.deQueue());
         }
+
         return found;
     }
 
