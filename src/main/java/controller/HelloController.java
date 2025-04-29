@@ -1,4 +1,4 @@
-package ucr.laboratory7;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
