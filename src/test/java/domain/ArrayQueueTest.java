@@ -15,6 +15,19 @@ class ArrayQueueTest {
     }
 
     @Test
+    void size2(){
+        ArrayQueue arrayQueue = new ArrayQueue(20);
+        try{
+            for (int i = 0; i < 15; i++) {
+                arrayQueue.enQueue(util.Utility.random(30));
+            }
+            System.out.println(arrayQueue);
+        }catch (QueueException e){
+            throw new RuntimeException();
+        }
+    }
+
+    @Test
     void clear() {
         ArrayQueue queue=new ArrayQueue(10);
         queue.enQueue(10);

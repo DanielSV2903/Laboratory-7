@@ -28,6 +28,19 @@ class LinkedQueueTest {
     }
 
     @Test
+    void size2(){
+        LinkedQueue linkedQueue = new LinkedQueue();
+        try{
+            for (int i = 0; i < 15; i++) {
+                linkedQueue.enQueue(util.Utility.random(30));
+            }
+            System.out.println(linkedQueue);
+        }catch (QueueException e){
+            throw new RuntimeException();
+        }
+    }
+
+    @Test
     void clear() {
         LinkedQueue queue = new LinkedQueue();
         queue.enQueue(10);

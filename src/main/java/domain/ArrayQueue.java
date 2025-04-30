@@ -1,5 +1,8 @@
 package domain;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReferenceArray;
+
 public class ArrayQueue implements Queue {
     private Object[] queue;
     private int front;
@@ -104,4 +107,22 @@ public class ArrayQueue implements Queue {
         return peek();
     }
 
+    @Override
+    public String toString() {
+        if (isEmpty()) return "Array Queue is Empty";
+        String result = "Array Queue Content";
+        ArrayQueue aux = new ArrayQueue(size());
+        try {
+            while (!isEmpty()){
+                result += front()+"\n";
+                aux.enQueue(deQueue());
+            }
+            while (!isEmpty()){
+                enQueue(aux.deQueue());
+            }
+        } catch (QueueException e){
+            throw new RuntimeException();
+        }
+        return result;
+    }
 }

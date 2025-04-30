@@ -1,11 +1,11 @@
 package domain;
 
-public class LinkedQueue implements Queue {
+public class HeaderLinkedQueue implements Queue {
     private Node front;
     private Node rear;
     private int counter;
 
-    public LinkedQueue() {
+    public HeaderLinkedQueue() {
         front =rear= null;
         counter = 0;
     }
@@ -31,7 +31,7 @@ public class LinkedQueue implements Queue {
         if (isEmpty()) throw new QueueException("Queue is empty");
         if (rear.data.equals(element)) return counter;
         if (front.data.equals(element)) return 1;
-        LinkedQueue aux= new LinkedQueue();
+        HeaderLinkedQueue aux= new HeaderLinkedQueue();
         int index=1;
             while(peek()!=element){
                 aux.enQueue(deQueue());
@@ -73,7 +73,7 @@ public class LinkedQueue implements Queue {
         if (isEmpty())
             throw new QueueException("Queue is empty");
          boolean found = false;
-         LinkedQueue aux= new LinkedQueue();
+         HeaderLinkedQueue aux= new HeaderLinkedQueue();
          while(!isEmpty()){
              aux.enQueue(deQueue());
              if (aux.rear.data.equals(element)) found = true;
@@ -99,7 +99,7 @@ public class LinkedQueue implements Queue {
     public String toString() {
         if (isEmpty()) return "Array Queue is Empty";
         String result = "Array Queue Content";
-        LinkedQueue aux = new LinkedQueue();
+        HeaderLinkedQueue aux = new HeaderLinkedQueue();
         try {
             while (!isEmpty()){
                 result += front()+"\n";
