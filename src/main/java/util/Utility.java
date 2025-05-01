@@ -186,6 +186,22 @@ public class Utility {
             default:return "0";
         }
     }
+
+    public static String getPlace(){
+        String places[] = {"San José", "Ciudad Quesada", "Paraíso",
+                "Turrialba", "Limón", "Liberia", "Puntarenas", "San Ramón", "Puerto Viejo", "Volcán Irazú", "Pérez Zeledón",
+                "Palmares", "Orotina", "El coco", "Ciudad Neilly", "Sixaola", "Guápiles","Siquirres"
+                , "El Guarco", "Cartago", "Santa Bárbara", "Jacó", "Manuel Antonio", "Quepos", "Santa Cruz",
+                "Nicoya"};
+
+        return places[random(places.length-1)];
+    }
+
+    public static String getWeather(){
+        String weather[] = {"rainy", "thunderstorm", "sunny", "cloudy", "foggy"};
+
+        return weather[random(weather.length-1)];
+    }
 }
 //    private ObservableList<List<String>> getEmployeeList() {
 //        ObservableList<List<String>> data = FXCollections.observableArrayList();

@@ -1,4 +1,4 @@
-package domain;
+package domain.queue;
 
 public class ArrayQueue implements Queue {
     private Object[] queue;
@@ -6,12 +6,12 @@ public class ArrayQueue implements Queue {
     private int rear;
     private int n;
 
-    public ArrayQueue(int n) {
-        if (n<=0) System.exit(1);
+    public ArrayQueue(int n){
+        if(n<=0) System.exit(1); //se sale
         this.n = n;
-        queue = new Object[n];
-        front = rear = (this.n-1);
-        //this.front = rear;
+        this.queue = new Object[n];
+        this.rear = n-1; //ultimo elemento de la cola
+        this.front = rear;
     }
     @Override
     public int size() {
@@ -20,8 +20,9 @@ public class ArrayQueue implements Queue {
 
     @Override
     public void clear() {
-        this.front=this.rear=(this.n-1);
-        queue=new Object[this.n];
+        this.rear = n-1; //ultimo elemento de la cola
+        front = rear;
+        this.queue = new Object[n];
     }
 
     @Override
@@ -31,8 +32,10 @@ public class ArrayQueue implements Queue {
 
     @Override
     public int indexOf(Object element) throws QueueException {
-        if (isEmpty()) throw new QueueException("Queue is empty");
-        ArrayQueue aux = new ArrayQueue(n);
+        if (isEmpty())
+            throw new QueueException("Queue is empty");
+
+        ArrayQueue aux = new ArrayQueue(size());
         int index = 0;
         int foundedIndex = -1;//-1 si el indice no fue encontrado
 
@@ -53,33 +56,33 @@ public class ArrayQueue implements Queue {
 
     @Override
     public void enQueue(Object element) throws QueueException {
-        if (size() == n)
-            throw new QueueException("Queue is full");
+        if(size()==queue.length)
+            throw new QueueException("Array Queue is Full");
 
-        if (isEmpty()) {
-            queue[rear] = element;
-            front--;
-        } else {
-            for (int i = front + 1; i <= rear; i++) {
-                queue[i - 1] = queue[i];
-            }
-            queue[rear] = element;
-            front--;
+        //la primera vez no entra al for
+        for (int i = front; i < rear; i++) {
+            queue[i] = queue[i+1];
         }
+        //siempre encola en el extremo posterior
+        //y mueve anterior una posicion a la izq
+        queue[rear] = element;
+        front--; //la idea es q anterior quede en un campo vacio
     }
 
     @Override
     public Object deQueue() throws QueueException {
-        if (isEmpty()) throw new QueueException("Queue is empty");
+        if (isEmpty())
+            throw new QueueException("Queue is empty");
         return queue[++front];
     }
 
     @Override
     public boolean contains(Object element) throws QueueException {
-        if (isEmpty()) throw new QueueException("Queue is empty");
+        if (isEmpty())
+            throw new QueueException("Queue is empty");
 
+        ArrayQueue aux = new ArrayQueue(size());
         boolean found = false;
-        ArrayQueue aux = new ArrayQueue(n);
 
         while (!isEmpty()) {
             Object current = deQueue();//guardo en una variable para evaluar
@@ -97,7 +100,8 @@ public class ArrayQueue implements Queue {
 
     @Override
     public Object peek() throws QueueException {
-        if (isEmpty()) throw new QueueException("Queue is empty");
+        if (isEmpty())
+            throw new QueueException("Queue is empty");
         return queue[front+1];
     }
 
@@ -120,7 +124,7 @@ public class ArrayQueue implements Queue {
                 aux.enQueue(deQueue());
             }
 
-            while (!isEmpty()){
+            while (!aux.isEmpty()){
                 enQueue(aux.deQueue());
             }
         } catch (QueueException q) {

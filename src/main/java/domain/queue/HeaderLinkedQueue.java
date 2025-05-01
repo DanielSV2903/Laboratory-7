@@ -1,12 +1,12 @@
-package domain;
+package domain.queue;
 
-public class LinkedQueue implements Queue {
+public class HeaderLinkedQueue implements Queue {
     private Node front;
     private Node rear;
     private int counter;
 
-    public LinkedQueue() {
-        front = rear = null;
+    public HeaderLinkedQueue() {
+        front =rear= new Node();
         counter = 0;
     }
 
@@ -17,13 +17,14 @@ public class LinkedQueue implements Queue {
 
     @Override
     public void clear() {
-        front = rear = null;
+        front = rear = new Node(); // nodo dummy otra vez
         counter = 0;
     }
 
+
     @Override
     public boolean isEmpty() {
-        return counter == 0;
+        return front==rear;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class LinkedQueue implements Queue {
         if (isEmpty()) throw new QueueException("Queue is empty");
         if (rear.data.equals(element)) return counter;
         if (front.data.equals(element)) return 1;
-        LinkedQueue aux= new LinkedQueue();
+        HeaderLinkedQueue aux= new HeaderLinkedQueue();
         int index=1;
             while(peek()!=element){
                 aux.enQueue(deQueue());
@@ -49,20 +50,22 @@ public class LinkedQueue implements Queue {
     @Override
     public void enQueue(Object element) throws QueueException {
         Node newNode = new Node(element);
-        if (isEmpty()) {
-            front = rear = newNode;
-        }else{
-            rear.next = newNode;
-            rear = newNode;
-        }
+        rear.next = newNode;
+        rear = newNode;
         counter++;
     }
 
     @Override
     public Object deQueue() throws QueueException {
-        if (isEmpty())throw new QueueException("Queue is empty");
-        Object element = front.data;
-        front = front.next;
+        if (isEmpty())
+            throw new QueueException("Queue is empty");
+
+        Object element = front.next.data;
+
+        if (front.next == rear)
+            clear();
+        else
+            front.next = front.next.next;
         counter--;
         return element;
     }
@@ -71,11 +74,15 @@ public class LinkedQueue implements Queue {
     public boolean contains(Object element) throws QueueException {
         if (isEmpty())
             throw new QueueException("Queue is empty");
-         boolean found = false;
-         LinkedQueue aux= new LinkedQueue();
+
+        HeaderLinkedQueue aux= new HeaderLinkedQueue();
+        boolean found = false;
+
          while(!isEmpty()){
+             if(util.Utility.compare(front(), element)==0){
+                 found = true;
+             }
              aux.enQueue(deQueue());
-             if (aux.rear.data.equals(element)) found = true;
          }
          while(!aux.isEmpty()){
              enQueue(aux.deQueue());
@@ -85,22 +92,25 @@ public class LinkedQueue implements Queue {
 
     @Override
     public Object peek() throws QueueException {
-        if(isEmpty())throw new QueueException("Queue is empty");
-        return front.data;
+        if(isEmpty())
+            throw new QueueException("Queue is empty");
+        return front.next.data;
     }
 
     @Override
     public Object front() throws QueueException {
-        return peek();
+        if(isEmpty())
+            throw new QueueException("Header Linked Queue is Empty");
+        return front.next.data;
     }
 
     @Override
     public String toString() {
         if (isEmpty())
-            return "Linked Queue is Empty";
+            return "Header Linked Queue is Empty";
 
-        String result = "Linked Queue Content \n";
-        LinkedQueue aux = new LinkedQueue();
+        String result = "Header Linked Queue Content \n";
+        HeaderLinkedQueue aux = new HeaderLinkedQueue();
 
         try{
             while (!isEmpty()){
@@ -108,7 +118,7 @@ public class LinkedQueue implements Queue {
                 aux.enQueue(deQueue());
             }
 
-            while (!isEmpty()){
+            while (!aux.isEmpty()){
                 enQueue(aux.deQueue());
             }
         } catch (QueueException q) {

@@ -1,5 +1,7 @@
 package domain;
 
+import domain.queue.LinkedQueue;
+import domain.queue.QueueException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,6 +120,34 @@ class LinkedQueueTest {
         System.out.println("___Without duplicates"+linkedQueue);
     }
 
+    boolean isBalanced(LinkedQueue queue, String expression) {
+        int counter = 0;
+        for (char character : expression.toCharArray()) {
+            if (character == '(' || character == ')') {
+                queue.enQueue(character);
+                if (character == '(') counter++;
+                else counter--;
+            }
+        }
+        if (counter == 0) return true;
+        return false;
+    }
+
+    @Test
+    void removeDuplicatesTest(){
+        LinkedQueue linkedQueue = new LinkedQueue();
+
+        for (int i = 0; i < 20; i++)
+            linkedQueue.enQueue(util.Utility.random(20));
+        System.out.println("___With duplicates"+linkedQueue);
+        removeDuplicates(linkedQueue);
+        System.out.println("___Without duplicates"+linkedQueue);
+
+
+
+
+    }
+
     void removeDuplicates(LinkedQueue queue){
         LinkedQueue aux = new LinkedQueue();
         for (int i = 0; i<queue.size(); i++){
@@ -137,16 +167,5 @@ class LinkedQueueTest {
         }
     }
 
-    boolean isBalanced(LinkedQueue queue, String expression) {
-        int counter = 0;
-        for (char character : expression.toCharArray()) {
-            if (character == '(' || character == ')') {
-                queue.enQueue(character);
-                if (character == '(') counter++;
-                else counter--;
-            }
-        }
-        if (counter == 0) return true;
-        return false;
-    }
+
 }
