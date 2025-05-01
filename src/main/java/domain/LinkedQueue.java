@@ -97,18 +97,22 @@ public class LinkedQueue implements Queue {
 
     @Override
     public String toString() {
-        if (isEmpty()) return "Array Queue is Empty";
-        String result = "Array Queue Content";
+        if (isEmpty())
+            return "Linked Queue is Empty";
+
+        String result = "Linked Queue Content \n";
         LinkedQueue aux = new LinkedQueue();
-        try {
+
+        try{
             while (!isEmpty()){
-                result += front()+"\n";
+                result += front() + "\n";
                 aux.enQueue(deQueue());
             }
+
             while (!isEmpty()){
                 enQueue(aux.deQueue());
             }
-        } catch (QueueException e){
+        } catch (QueueException q) {
             throw new RuntimeException();
         }
         return result;

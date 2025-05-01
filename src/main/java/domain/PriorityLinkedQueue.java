@@ -1,12 +1,12 @@
 package domain;
 
-public class HeaderLinkedQueue implements Queue {
+public class PriorityLinkedQueue implements Queue {
     private Node front;
     private Node rear;
     private int counter;
 
-    public HeaderLinkedQueue() {
-        front =rear= new Node();
+    public PriorityLinkedQueue() {
+        front =rear= null;
         counter = 0;
     }
 
@@ -17,14 +17,13 @@ public class HeaderLinkedQueue implements Queue {
 
     @Override
     public void clear() {
-        front = rear = new Node(); // nodo dummy otra vez
+        front = rear = null;
         counter = 0;
     }
 
-
     @Override
     public boolean isEmpty() {
-        return front==rear;
+        return counter==0;
     }
 
     @Override
@@ -32,7 +31,7 @@ public class HeaderLinkedQueue implements Queue {
         if (isEmpty()) throw new QueueException("Queue is empty");
         if (rear.data.equals(element)) return counter;
         if (front.data.equals(element)) return 1;
-        HeaderLinkedQueue aux= new HeaderLinkedQueue();
+        PriorityLinkedQueue aux= new PriorityLinkedQueue();
         int index=1;
             while(peek()!=element){
                 aux.enQueue(deQueue());
@@ -50,20 +49,52 @@ public class HeaderLinkedQueue implements Queue {
     @Override
     public void enQueue(Object element) throws QueueException {
         Node newNode = new Node(element);
-        rear.next = newNode;
-        rear = newNode;
-        counter++;
+        if (isEmpty()) {
+            front = rear = newNode;
+            counter=1;
+        }else{
+            rear.next = newNode;
+            rear = newNode;
+            counter++;
+        }
     }
+
+    public void enQueue(Object element, int priority) throws QueueException {
+        Node newNode = new Node(element, priority);
+        if (isEmpty()) {
+            rear = newNode;
+            front = rear;
+        }else{
+            Node aux = front;
+            Node prev = front;
+            while (aux != null && aux.priority >= priority){
+                prev = aux; //dejo un apuntador al nodo aterior para ver que esta pasando
+                aux = aux.next;
+            }
+            //se sale cuando alcanza a nulo o la prioridad del objeto es menor
+            //primero pregunto si el nuevo elemento tiene una prioridad
+            //más alta al elemento del frente de la cola
+            if (aux == front){
+                newNode.next = front;
+                front = newNode;
+            } else if (aux == null) {//se encola em forma normal
+                prev.next = newNode;
+                rear = newNode;
+            } else {//el nuevo elemento va a quedar en medio de dos nodos
+                prev.next = newNode;
+                newNode.next = aux;
+            }
+            counter++;
+        }
+    }
+
+
 
     @Override
     public Object deQueue() throws QueueException {
         if (isEmpty())throw new QueueException("Queue is empty");
-        Object element = front.next.data;
+        Object element = front.data;
         front = front.next;
-        if (front.next == rear)
-            clear();
-        else
-            front.next = front.next.next;
         counter--;
         return element;
     }
@@ -73,7 +104,7 @@ public class HeaderLinkedQueue implements Queue {
         if (isEmpty())
             throw new QueueException("Queue is empty");
          boolean found = false;
-         HeaderLinkedQueue aux= new HeaderLinkedQueue();
+         PriorityLinkedQueue aux= new PriorityLinkedQueue();
          while(!isEmpty()){
              aux.enQueue(deQueue());
              if (aux.rear.data.equals(element)) found = true;
@@ -87,21 +118,21 @@ public class HeaderLinkedQueue implements Queue {
     @Override
     public Object peek() throws QueueException {
         if(isEmpty())throw new QueueException("Queue is empty");
-        return front.next.data;
+        return front.data;
     }
 
     @Override
     public Object front() throws QueueException {
-        return front.next.data;
+        return peek();
     }
 
     @Override
     public String toString() {
         if (isEmpty())
-            return "Header Linked Queue is Empty";
+            return "Linked Queue is Empty";
 
-        String result = "Header Linked Queue Content \n";
-        HeaderLinkedQueue aux = new HeaderLinkedQueue();
+        String result = "Linked Queue Content \n";
+        PriorityLinkedQueue aux = new PriorityLinkedQueue();
 
         try{
             while (!isEmpty()){
@@ -109,9 +140,10 @@ public class HeaderLinkedQueue implements Queue {
                 aux.enQueue(deQueue());
             }
 
-            while (!isEmpty()){
+            while (!aux.isEmpty()) { // ✅ esto es lo correcto
                 enQueue(aux.deQueue());
             }
+
         } catch (QueueException q) {
             throw new RuntimeException();
         }

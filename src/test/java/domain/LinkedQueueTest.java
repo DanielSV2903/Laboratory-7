@@ -28,19 +28,6 @@ class LinkedQueueTest {
     }
 
     @Test
-    void size2(){
-        LinkedQueue linkedQueue = new LinkedQueue();
-        try{
-            for (int i = 0; i < 15; i++) {
-                linkedQueue.enQueue(util.Utility.random(30));
-            }
-            System.out.println(linkedQueue);
-        }catch (QueueException e){
-            throw new RuntimeException();
-        }
-    }
-
-    @Test
     void clear() {
         LinkedQueue queue = new LinkedQueue();
         queue.enQueue(10);
@@ -99,5 +86,17 @@ class LinkedQueueTest {
         queue.enQueue(20);
         queue.enQueue(30);
         assertEquals(10,queue.front());
+    }
+
+    @Test
+    void test(){
+        LinkedQueue linkedQueue = new LinkedQueue();
+        try {
+            for (int i = 0; i < 15; i++)
+                linkedQueue.enQueue((util.Utility.random(30)));
+            System.out.println(linkedQueue);
+        } catch (QueueException q) {
+            throw new RuntimeException();
+        }
     }
 }

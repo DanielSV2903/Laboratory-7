@@ -1,19 +1,27 @@
 package domain;
 
 public class Node {
+    public int priority; //1.low, 2.medium, 3.high
     public Object data;
-    public Node prev; //apuntador al nodo anterior
+    //public Node prev; //apuntador al nodo anterior
     public Node next; //apuntador al nodo siguiente
 
     //Constructor 1
+
     public Node(Object data) {
         this.data = data;
-        this.prev = this.next = null; //puntero al sgte nodo es nulo por default
+        //this.prev =
+                this.next = null; //puntero al sgte nodo es nulo por default
     }
 
     //Constructor 2
     public Node() {
-        this.prev = this.next = null;
+        this.next = null;
     }
 
+    public Node(Object element, int priority) {
+        this.data = element;
+        this.priority = priority;
+        this.next = null;
+    }
 }
