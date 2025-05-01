@@ -1,6 +1,6 @@
 package domain.stack;
 
-import domain.StackException;
+import domain.stack.StackException;
 
 public interface Stack {
     public int size(); // devuelve el número de elementos en la pila

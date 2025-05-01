@@ -1,7 +1,10 @@
 package domain.stack;
 
-import domain.Stack;
-import domain.StackException;
+import domain.queue.Node;
+import domain.stack.Stack;
+import domain.stack.StackException;
+
+
 
 public class LinkedStack implements Stack {
     private Node top;// es un apuntador
