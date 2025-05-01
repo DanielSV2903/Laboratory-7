@@ -1,8 +1,4 @@
 package domain.stack;
-
-import domain.Stack;
-import domain.StackException;
-
 public class ArrayStack implements Stack {
     private int n; //el tam max de la pila
     private int top; //para llevar el control del tope de la pila

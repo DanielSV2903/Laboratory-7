@@ -26,7 +26,11 @@ class LinkedQueueTest {
         LinkedQueue queue = new LinkedQueue();
         queue.enQueue(10);
         queue.enQueue(20);
-        assertEquals(2,queue.size());
+        queue.enQueue(30);
+        queue.enQueue(40);
+        queue.enQueue(50);
+        queue.enQueue(60);
+        assertEquals(6,queue.size());
     }
 
     @Test
@@ -65,6 +69,7 @@ class LinkedQueueTest {
 
         System.out.println(queue);
         System.out.println(queue.size());
+        assertEquals(4,queue.size());
     }
 
     @Test
