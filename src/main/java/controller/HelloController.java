@@ -46,12 +46,10 @@ public class HelloController {
     }
 
     @FXML
-    public void arithmeticConverterOnAction(ActionEvent actionEvent) {
-        load("arithmeticConverter.fxml");
+    public void queueToStackOnAction(ActionEvent actionEvent) {load("queueToStack.fxml");
     }
 
     @FXML
-    public void baseConverterOnAction(ActionEvent actionEvent) {
-        load("baseConverter.fxml");
+    public void priorityQueueOnAction(ActionEvent actionEvent) {
     }
 }

@@ -16,12 +16,12 @@
                   <Font name="Arial" size="30.0" />
                </font>
             </Button>
-            <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#baseConverterOnAction" onMousePressed="#exampleOnMousePressed" prefHeight="62.0" prefWidth="219.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Base Converter" textFill="WHITE">
+            <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#priorityQueueOnAction" onMousePressed="#exampleOnMousePressed" prefHeight="62.0" prefWidth="219.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Priority Queue" textFill="WHITE">
                <font>
                   <Font name="Arial" size="24.0" />
                </font>
             </Button>
-            <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#arithmeticConverterOnAction" onMousePressed="#exampleOnMousePressed" prefHeight="62.0" prefWidth="219.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Arithmetic Converter" textFill="WHITE">
+            <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#queueToStackOnAction" onMousePressed="#exampleOnMousePressed" prefHeight="62.0" prefWidth="219.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Queue to Stack/ Stack to  Queue" textFill="WHITE">
                <font>
                   <Font name="Arial" size="20.0" />
                </font>
