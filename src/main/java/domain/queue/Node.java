@@ -1,17 +1,15 @@
-package domain;
+package domain.queue;
 
 public class Node {
     public int priority; //1.low, 2.medium, 3.high
     public Object data;
-    //public Node prev; //apuntador al nodo anterior
     public Node next; //apuntador al nodo siguiente
 
     //Constructor 1
 
     public Node(Object data) {
         this.data = data;
-        //this.prev =
-                this.next = null; //puntero al sgte nodo es nulo por default
+        this.next = null; //puntero al sgte nodo es nulo por default
     }
 
     //Constructor 2

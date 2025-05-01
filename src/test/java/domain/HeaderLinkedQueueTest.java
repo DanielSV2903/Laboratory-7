@@ -1,8 +1,11 @@
 package domain;
 
+import domain.person.Climate;
+import domain.person.Place;
+import domain.person.Weather;
+import domain.queue.HeaderLinkedQueue;
+import domain.queue.QueueException;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class HeaderLinkedQueueTest {
     @Test
@@ -15,11 +18,25 @@ class HeaderLinkedQueueTest {
         } catch (QueueException q) {
             throw new RuntimeException();
         }
+    }
 
+    @Test
+    void testPlaceWeather(){
+        try {
+            HeaderLinkedQueue q1 = new HeaderLinkedQueue();
+            HeaderLinkedQueue q2 = new HeaderLinkedQueue();
+            HeaderLinkedQueue q3 = new HeaderLinkedQueue();
 
+            for (int i = 0; i < 20; i++)
+                q1.enQueue(new Climate(new Place(util.Utility.getPlace()), new Weather(util.Utility.getWeather())));
+
+            System.out.println(q1);
+
+        } catch (QueueException e){
+            throw new RuntimeException();
+        }
 
 
 
     }
-
 }
