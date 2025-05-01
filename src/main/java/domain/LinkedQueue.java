@@ -6,7 +6,7 @@ public class LinkedQueue implements Queue {
     private int counter;
 
     public LinkedQueue() {
-        front =rear= null;
+        front = rear = null;
         counter = 0;
     }
 
@@ -23,7 +23,7 @@ public class LinkedQueue implements Queue {
 
     @Override
     public boolean isEmpty() {
-        return counter==0;
+        return counter == 0;
     }
 
     @Override
@@ -51,12 +51,11 @@ public class LinkedQueue implements Queue {
         Node newNode = new Node(element);
         if (isEmpty()) {
             front = rear = newNode;
-            counter=1;
         }else{
             rear.next = newNode;
             rear = newNode;
-            counter++;
         }
+        counter++;
     }
 
     @Override

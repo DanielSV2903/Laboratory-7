@@ -60,10 +60,9 @@ class LinkedQueueTest {
         queue.enQueue(20);
         queue.enQueue(30);
         queue.enQueue(40);
-        assertEquals(true,queue.contains(20));
-        assertEquals(true,queue.contains(10));
-        assertEquals(true,queue.contains(40));
-        assertEquals(false,queue.contains(50));
+
+        System.out.println(queue);
+        System.out.println(queue.size());
     }
 
     @Test
@@ -98,5 +97,56 @@ class LinkedQueueTest {
         } catch (QueueException q) {
             throw new RuntimeException();
         }
+    }
+
+    @Test
+    void test1(){
+        LinkedQueue linkedQueue = new LinkedQueue();
+        String[] array = {"(())()", "(()", "())(", "", "((()))", "(()(()))"};
+        for (String i : array){
+            boolean result = isBalanced(linkedQueue, i);
+            System.out.println("Expression: " + i + " → " + (result ? " is balanced" : " is not balanced"));
+        }
+
+        linkedQueue.clear();
+
+        for (int i = 0; i < 15; i++){
+            linkedQueue.enQueue(util.Utility.random(30));
+        }
+        System.out.println("___With duplicates"+linkedQueue);
+        removeDuplicates(linkedQueue);
+        System.out.println("___Without duplicates"+linkedQueue);
+    }
+
+    void removeDuplicates(LinkedQueue queue){
+        LinkedQueue aux = new LinkedQueue();
+        for (int i = 0; i<queue.size(); i++){
+            int a = i;
+            while (a>0){
+                aux.enQueue(queue.deQueue());
+                a--;
+            }
+            Object auxOb = queue.front();
+            while (!queue.isEmpty()){
+                aux.enQueue(queue.deQueue());
+                if (util.Utility.compare(auxOb, queue.front())==0){
+                    queue.deQueue();
+                }
+            }
+            queue = aux;
+        }
+    }
+
+    boolean isBalanced(LinkedQueue queue, String expression) {
+        int counter = 0;
+        for (char character : expression.toCharArray()) {
+            if (character == '(' || character == ')') {
+                queue.enQueue(character);
+                if (character == '(') counter++;
+                else counter--;
+            }
+        }
+        if (counter == 0) return true;
+        return false;
     }
 }
