@@ -1,5 +1,8 @@
 package util;
+import domain.person.Climate;
 import domain.person.Person;
+import domain.person.Place;
+import domain.person.Weather;
 import domain.queue.LinkedQueue;
 import domain.queue.PriorityLinkedQueue;
 import domain.queue.QueueException;
@@ -310,6 +313,28 @@ public class Utility {
         }
 
         return queue;
+    }
+
+    public static ObservableList<Climate> generateRandomClimateQueue() {
+        ObservableList<Climate> climates = FXCollections.observableArrayList();
+
+        while (climates.size() < 20) {
+            String weathers = randomGetWeather();
+            String place = randomGetPlace();
+
+            boolean exists = false;
+            for (Climate climate : climates) {
+                if (climate.getPlace().equals(place) && climate.getWeather().equals(weathers)) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                climates.add(new Climate(new Place(place), new Weather(weathers)));
+            }
+        }
+        return climates;
     }
 
 

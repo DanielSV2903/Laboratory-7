@@ -56,16 +56,30 @@ public class QueueToStackController {
     @javafx.fxml.FXML
     public void btnClearOnAction(ActionEvent actionEvent) {
         this.tFieldPlace.clear();
-        this.choiceBoxWh.setValue(null);
+        this.choiceBoxWh.getSelectionModel().clearSelection();
         queue.clear();
+        updateTableViewQueue();
 
 
     }
 
     @javafx.fxml.FXML
     public void autoEnQueueOnAction(ActionEvent actionEvent) {
+        climateObservableList.clear();
+        queue.clear();
 
+        ObservableList<Climate> weatherData = FXCollections.observableArrayList(util.Utility.generateRandomClimateQueue());
 
+        try {
+            for (Climate climate : weatherData) {
+                queue.enQueue(climate);
+                climateObservableList.add(climate);
+            }
+
+            mostrarAlerta("Se agregaron 20 climas", Alert.AlertType.INFORMATION);
+        } catch (QueueException e) {
+            mostrarAlerta("Hubo un error", Alert.AlertType.ERROR);
+        }
 
     }
 
