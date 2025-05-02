@@ -1,13 +1,17 @@
 package controller;
 
+import domain.person.Climate;
 import domain.person.Person;
 import domain.queue.PriorityLinkedQueue;
 import domain.queue.QueueException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +44,25 @@ public class PriorityQueueController {
     private ObservableList<List<String>> data;
     @javafx.fxml.FXML
     public void initialize() {
+        alert = new Alert(Alert.AlertType.INFORMATION);
         this.priorityQueue = new PriorityLinkedQueue();
         data = getData();
+        this.cBoxPriority.setItems(util.Utility.getPriorityData());
+        this.cBoxMood.setItems(util.Utility.getMoodData());
 
+        tColName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
+        tColMood.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(1)));
+        tColAttention.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(2)));
+        tColPriority.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(3)));
+
+        try {
+            this.tView.setItems(data);
+        }catch (QueueException e){
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText(e.getMessage());
+        }
     }
 
     @javafx.fxml.FXML
@@ -50,7 +70,7 @@ public class PriorityQueueController {
         String name=tfName.getText().trim();
         String mood=cBoxMood.getSelectionModel().getSelectedItem().trim();
         priority=prioritySelection();
-        int attentionTime=util.Utility.random(90);
+        int attentionTime=util.Utility.random(99);
         Person person=new Person(name,mood,attentionTime);
         priorityQueue.enQueue(person,priority);
         updateTableView();
@@ -72,6 +92,9 @@ public class PriorityQueueController {
 
     @javafx.fxml.FXML
     public void autoEnQueueOnAction(ActionEvent actionEvent) {
+        ObservableList<List<String>> data=util.Utility.getAutoEnQueuePriorityRandom();
+//        tView.getItems().clear();
+        tView.setItems(data);
     }
     private int prioritySelection(){
         int selectedIndex;
@@ -92,10 +115,24 @@ public class PriorityQueueController {
         }
         return selectedIndex;
     };
-
-    private void updateTableView() {
-       //Hacer el metodo
+    private String priorityString(){
+        return switch (priority) {
+            case 1 -> "low";
+            case 2 -> "medium";
+            case 3 -> "high";
+            default -> " ";
+        };
     }
+
+    private void updateTableView() throws QueueException {
+        this.tView.getItems().clear(); //clear table
+        PriorityLinkedQueue aux=new PriorityLinkedQueue();
+        if(priorityQueue!=null && !priorityQueue.isEmpty()){
+               ObservableList<List<String>> data=getData();
+               this.tView.setItems(data);
+            }
+        }
+
     private ObservableList<List<String>> getData() {
         ObservableList<List<String>> data = FXCollections.observableArrayList();
         if(priorityQueue!=null &&!priorityQueue.isEmpty()){
@@ -104,10 +141,10 @@ public class PriorityQueueController {
                while (!priorityQueue.isEmpty()){
                    Person person = (Person) priorityQueue.deQueue();
                    List<String> arrayList = new ArrayList<>();
-                   arrayList.add(String.valueOf(person.getName()));
+                   arrayList.add(person.getName());
                    arrayList.add(person.getMood());
                    arrayList.add(String.valueOf(person.getAttentionTime()));
-                   arrayList.add(String.valueOf(priority));
+                   arrayList.add(priorityString());
                    data.add(arrayList);
                    aux.enQueue(person);
                }

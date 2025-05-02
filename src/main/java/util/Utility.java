@@ -1,5 +1,10 @@
 package util;
+import domain.person.Person;
 import domain.queue.LinkedQueue;
+import domain.queue.PriorityLinkedQueue;
+import domain.queue.QueueException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -248,6 +253,101 @@ public class Utility {
         Utility.queue = queue;
     }
 
+    public static ObservableList<String> getMoodData() {
+        ObservableList<String> data= FXCollections.observableArrayList();
+        String moods="Happiness, Sadness, Anger, Sickness, Cheerful, Reflective, Gloomy, Romantic, Calm, Hopeful, Fearful, Tense, Lonely";
+        String [] array=moods.split(",");
+        for(int i=0;i<array.length;i++){
+            data.add(array[i]);
+        }
+        return data;
+    }
+    public static ObservableList<String> getPriorityData() {
+        ObservableList<String> data= FXCollections.observableArrayList();
+            data.add("high");
+            data.add("medium");
+            data.add("low");
+        return data;
+    }
+    private static List<String> personPriorities = new ArrayList<>();
+    public static PriorityLinkedQueue generateRandomPersonsQueue() {
+        PriorityLinkedQueue queue = new PriorityLinkedQueue();
+        String moods = "Happiness,Sadness,Anger,Sickness,Cheerful,Reflective,Gloomy,Romantic,Calm,Hopeful,Fearful,Tense,Lonely";
+        String[] array = moods.split(",");
+        String[] names = {
+                "José", "María", "Juan", "Carmen", "Luis",
+                "Ana", "Carlos", "Isabel", "Miguel", "Laura",
+                "Pedro", "Elena", "Jorge", "Rosa", "Francisco",
+                "Patricia", "Antonio", "Lucía", "Manuel", "Marta"
+        };
+        String[] priorities = {"high", "medium", "low"};
+
+        for (int i = 0; i < 20; i++) {
+            String mood = array[Utility.random(array.length - 1)];
+            String name = names[Utility.random(names.length - 1)];
+            int aTime = Utility.random(99);
+            String priority = priorities[Utility.random(0, 2)];
+            personPriorities.add(priority);
+            int priorityInt = prioritySelection(priority);
+            Person person = new Person(name, mood, aTime);
+            queue.enQueue(person, priorityInt);
+        }
+
+        return queue;
+    }
+    public static ObservableList<List<String>> getAutoEnQueuePriorityRandom() {
+        ObservableList<List<String>> data = FXCollections.observableArrayList();
+        PriorityLinkedQueue queue = generateRandomPersonsQueue();
+
+        try {
+            PriorityLinkedQueue aux = new PriorityLinkedQueue();
+            int i=1;
+            while (!queue.isEmpty()&& i<personPriorities.size()) {
+                Person t = (Person) queue.deQueue();
+                List<String> arrayList = new ArrayList<>();
+                arrayList.add(t.getName());
+                arrayList.add(t.getMood());
+                arrayList.add(String.valueOf(t.getAttentionTime()));
+                arrayList.add(personPriorities.get(i));
+                data.add(arrayList);
+                aux.enQueue(t);
+                i++;
+            }
+            while (!aux.isEmpty()) {
+                queue.enQueue(aux.deQueue());
+            }
+        } catch (QueueException ex) {
+            ex.printStackTrace(); // O manejar como tú prefieras
+        }
+
+        return data;
+    }
+    private static int prioritySelection(String priority){
+        int selectedIndex;
+        switch(priority){
+            case "high":
+                selectedIndex=3;
+                break;
+            case "medium":
+                selectedIndex=2;
+                break;
+            case "low":
+                selectedIndex=1;
+                break;
+            default:
+                selectedIndex=0;
+                break;
+        }
+        return selectedIndex;
+    };
+    private static String priorityString(int priority){
+        return switch (priority) {
+            case 1 -> "low";
+            case 2 -> "medium";
+            case 3 -> "high";
+            default -> " ";
+        };
+    }
 }
 //    private ObservableList<List<String>> getEmployeeList() {
 //        ObservableList<List<String>> data = FXCollections.observableArrayList();

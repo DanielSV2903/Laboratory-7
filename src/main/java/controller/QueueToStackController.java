@@ -45,8 +45,6 @@ public class QueueToStackController {
         ObservableList<String> weatherData = FXCollections.observableArrayList(util.Utility.getWeather());
         this.choiceBoxWh.setItems(weatherData);
 
-
-
     }
 
     @javafx.fxml.FXML

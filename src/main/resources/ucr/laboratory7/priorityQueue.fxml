@@ -12,49 +12,49 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="bp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="692.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PriorityQueueController">
+<BorderPane fx:id="bp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PriorityQueueController">
    <center>
       <AnchorPane prefHeight="570.0" prefWidth="733.0" style="-fx-background-color: #33d38a;" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="59.0" prefWidth="692.0" style="-fx-background-color: #fa8522;">
+            <Pane prefHeight="59.0" prefWidth="780.0" style="-fx-background-color: #fa8522;">
                <children>
-                  <Label layoutX="203.0" layoutY="15.0" text="Priority Queue Management" textFill="WHITE">
+                  <Label layoutX="247.0" layoutY="15.0" text="Priority Queue Management" textFill="WHITE">
                      <font>
                         <Font name="Bodoni MT" size="24.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <Pane layoutX="46.0" layoutY="59.0" prefHeight="216.0" prefWidth="600.0">
+            <Pane layoutX="90.0" layoutY="59.0" prefHeight="216.0" prefWidth="600.0">
                <children>
                   <Label layoutX="197.0" layoutY="14.0" text="Admission process">
                      <font>
                         <Font name="Bodoni MT" size="27.0" />
                      </font>
                   </Label>
-                  <Label layoutX="129.0" layoutY="56.0" text="Name:">
+                  <Label layoutX="107.0" layoutY="56.0" text="Name:">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Label>
-                  <Label layoutX="129.0" layoutY="87.0" text="Mood:">
+                  <Label layoutX="107.0" layoutY="95.0" text="Mood:">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Label>
-                  <Label layoutX="123.0" layoutY="127.0" text="Priority:">
+                  <Label layoutX="102.0" layoutY="143.0" text="Priority:">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Label>
-                  <ChoiceBox fx:id="cBoxMood" layoutX="197.0" layoutY="87.0" prefHeight="31.0" prefWidth="148.0" />
-                  <ChoiceBox fx:id="cBoxPriority" layoutX="197.0" layoutY="127.0" prefHeight="31.0" prefWidth="148.0" />
+                  <ChoiceBox fx:id="cBoxMood" layoutX="176.0" layoutY="95.0" prefHeight="31.0" prefWidth="170.0" />
+                  <ChoiceBox fx:id="cBoxPriority" layoutX="176.0" layoutY="143.0" prefHeight="31.0" prefWidth="171.0" />
                   <Button layoutX="365.0" layoutY="117.0" mnemonicParsing="false" onAction="#clearOnAction" prefHeight="52.0" prefWidth="100.0" text="Clear" />
                   <Button layoutX="365.0" layoutY="58.0" mnemonicParsing="false" onAction="#enQueueOnAction" prefHeight="52.0" prefWidth="100.0" text="En Queue" />
-                  <TextField fx:id="tfName" layoutX="197.0" layoutY="59.0" promptText="Ingrese un nombre" />
+                  <TextField fx:id="tfName" layoutX="176.0" layoutY="59.0" prefHeight="25.0" prefWidth="170.0" promptText="Ingrese un nombre" />
                </children>
             </Pane>
-            <TableView fx:id="tView" layoutX="6.0" layoutY="275.0" prefHeight="200.0" prefWidth="383.0">
+            <TableView fx:id="tView" layoutX="6.0" layoutY="275.0" prefHeight="200.0" prefWidth="418.0">
               <columns>
                 <TableColumn fx:id="tColName" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="tColMood" prefWidth="75.0" text="Mood" />
@@ -62,13 +62,13 @@
                   <TableColumn fx:id="tColPriority" prefWidth="106.0" text="Priority" />
               </columns>
             </TableView>
-            <TextArea fx:id="tArea" editable="false" layoutX="398.0" layoutY="275.0" prefHeight="200.0" prefWidth="287.0" text="Attention Process">
+            <TextArea fx:id="tArea" editable="false" layoutX="479.0" layoutY="275.0" prefHeight="200.0" prefWidth="287.0" text="Attention Process">
                <font>
                   <Font name="Bodoni MT" size="14.0" />
                </font>
             </TextArea>
             <Button layoutX="179.0" layoutY="491.0" mnemonicParsing="false" onAction="#autoEnQueueOnAction" prefHeight="52.0" prefWidth="184.0" text="Auto EnQueue" />
-            <Button layoutX="389.0" layoutY="491.0" mnemonicParsing="false" onAction="#attentionProcessOnAction" prefHeight="52.0" prefWidth="184.0" text="Attention Process" />
+            <Button layoutX="446.0" layoutY="491.0" mnemonicParsing="false" onAction="#attentionProcessOnAction" prefHeight="52.0" prefWidth="184.0" text="Attention Process" />
          </children>
       </AnchorPane>
    </center>
