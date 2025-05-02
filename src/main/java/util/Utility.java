@@ -170,7 +170,7 @@ public class Utility {
             return false;
         }
 
-        // Validar que se haya seleccionado un clima
+        //Valida que se haya seleccionado un clima en el CB
         if (choiceBoxWh.getValue() == null) {
             mostrarAlerta("Debe seleccionar un clima.");
             return false;
