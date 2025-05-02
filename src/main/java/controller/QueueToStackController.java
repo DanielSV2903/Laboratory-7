@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import util.Utility;
 
@@ -43,7 +44,12 @@ public class QueueToStackController {
     public void initialize() {
         this.queue = new LinkedQueue();
         ObservableList<String> weatherData = FXCollections.observableArrayList(util.Utility.getWeather());
+        climateObservableList = FXCollections.observableArrayList();
+        tViewQueue.setItems(climateObservableList);
         this.choiceBoxWh.setItems(weatherData);
+        tColumnQueuePlace.setCellValueFactory(new PropertyValueFactory<>("place"));
+        tColumnQueueWc.setCellValueFactory(new PropertyValueFactory<>("weather"));
+
 
     }
 
@@ -51,6 +57,7 @@ public class QueueToStackController {
     public void btnClearOnAction(ActionEvent actionEvent) {
         this.tFieldPlace.clear();
         this.choiceBoxWh.setValue(null);
+        queue.clear();
 
 
     }
@@ -79,7 +86,11 @@ public class QueueToStackController {
                 Weather weather = new Weather(weatherText);
                 Climate climate = new Climate(place, weather);
                 queue.enQueue(climate);
+                climateObservableList.add(climate);
+
+                //updateTableViewQueue();
                 mostrarAlerta("Entrada exitosamente", Alert.AlertType.INFORMATION);
+                btnClearOnAction(actionEvent);
             }
         }
     }
@@ -110,16 +121,16 @@ public class QueueToStackController {
         tViewQueue.getItems().clear();
 
         if (queue != null && !queue.isEmpty()) {
-            LinkedQueue aux = new LinkedQueue();
-
             try {
+                LinkedQueue aux = new LinkedQueue();
+
+
                 while (!queue.isEmpty()) {
-                    Object element = queue.deQueue();
-                    aux.enQueue(element);
-                    tViewQueue.getItems().add((Climate) element);
+                    Climate climate = (Climate) queue.deQueue();
+                    tViewQueue.getItems().add(climate);
+                    aux.enQueue(climate);
                 }
 
-                // Restaurar la cola original
                 while (!aux.isEmpty()) {
                     queue.enQueue(aux.deQueue());
                 }
