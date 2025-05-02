@@ -1,8 +1,18 @@
 package controller;
 
+import domain.person.Climate;
+import domain.person.Place;
+import domain.person.Weather;
+import domain.queue.LinkedQueue;
+import domain.queue.QueueException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import util.Utility;
+
+import java.util.LinkedList;
 
 public class QueueToStackController {
     @javafx.fxml.FXML
@@ -25,16 +35,102 @@ public class QueueToStackController {
     private BorderPane bp;
     @javafx.fxml.FXML
     private Button btnEnQueueOnAction;
+    private Alert alert;
+    private LinkedQueue queue;
+    private ObservableList<Climate> climateObservableList;
+
+    @javafx.fxml.FXML
+    public void initialize() {
+        this.queue = new LinkedQueue();
+        ObservableList<String> weatherData = FXCollections.observableArrayList(util.Utility.getWeather());
+        this.choiceBoxWh.setItems(weatherData);
+
+
+
+    }
 
     @javafx.fxml.FXML
     public void btnClearOnAction(ActionEvent actionEvent) {
+        this.tFieldPlace.clear();
+        this.choiceBoxWh.setValue(null);
+
+
     }
 
     @javafx.fxml.FXML
     public void autoEnQueueOnAction(ActionEvent actionEvent) {
+
+
+
     }
 
     @javafx.fxml.FXML
     public void btnToOnAction(ActionEvent actionEvent) {
     }
+
+    @javafx.fxml.FXML
+    public void enQueueOnAction(ActionEvent actionEvent) {
+        if (!validation()) {
+            mostrarAlerta("Asegurese de llenar todas las casillas", Alert.AlertType.ERROR);
+        } else {
+            if (util.Utility.validarEntradasQueueToStack(tFieldPlace, choiceBoxWh)){
+                String placeText = tFieldPlace.getText();
+                String weatherText = (String) choiceBoxWh.getSelectionModel().getSelectedItem();
+
+                Place place = new Place(placeText);
+                Weather weather = new Weather(weatherText);
+                Climate climate = new Climate(place, weather);
+                queue.enQueue(climate);
+                mostrarAlerta("Entrada exitosamente", Alert.AlertType.INFORMATION);
+            }
+        }
+    }
+
+    private ObservableList<String> getWeather() {
+        ObservableList<String> weatherData = FXCollections.observableArrayList(util.Utility.getWeather());
+        return weatherData;
+    }
+
+    private ObservableList<String> getPlace() {
+        ObservableList<String> placeData = FXCollections.observableArrayList(util.Utility.getPlace());
+        return placeData;
+    }
+
+    private void mostrarAlerta(String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle("Mensaje");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
+    private boolean validation(){
+        return (!tFieldPlace.getText().isEmpty() && choiceBoxWh.getValue() != null);
+    }
+
+    private void updateTableViewQueue() {
+        tViewQueue.getItems().clear();
+
+        if (queue != null && !queue.isEmpty()) {
+            LinkedQueue aux = new LinkedQueue();
+
+            try {
+                while (!queue.isEmpty()) {
+                    Object element = queue.deQueue();
+                    aux.enQueue(element);
+                    tViewQueue.getItems().add((Climate) element);
+                }
+
+                // Restaurar la cola original
+                while (!aux.isEmpty()) {
+                    queue.enQueue(aux.deQueue());
+                }
+
+            } catch (QueueException e) {
+                mostrarAlerta("Error al actualizar la tabla", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+
 }

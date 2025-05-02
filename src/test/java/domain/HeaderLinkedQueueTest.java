@@ -28,7 +28,7 @@ class HeaderLinkedQueueTest {
             HeaderLinkedQueue q3 = new HeaderLinkedQueue();
 
             for (int i = 0; i < 20; i++)
-                q1.enQueue(new Climate(new Place(util.Utility.getPlace()), new Weather(util.Utility.getWeather())));
+                q1.enQueue(new Climate(new Place(util.Utility.randomGetPlace()), new Weather(util.Utility.randomGetWeather())));
 
             System.out.println(q1);
 

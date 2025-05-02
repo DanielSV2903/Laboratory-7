@@ -9,6 +9,10 @@ public class Climate {
         this.weather = weather;
     }
 
+    public Climate() {
+
+    }
+
     public Place getPlace() {
         return place;
     }

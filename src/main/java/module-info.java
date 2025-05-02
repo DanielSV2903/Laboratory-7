@@ -3,6 +3,7 @@ module ucr.laboratory7 {
     requires javafx.fxml;
 
 
+    exports ucr.laboratory7;
     opens ucr.laboratory7 to javafx.fxml;
     exports controller;
     opens controller to javafx.fxml;

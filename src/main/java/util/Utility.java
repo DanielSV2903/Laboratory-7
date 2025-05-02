@@ -1,5 +1,7 @@
 package util;
+import domain.queue.LinkedQueue;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
@@ -15,6 +17,7 @@ import java.util.*;
 
 public class Utility {
     private static  Random random;
+    private static LinkedQueue queue;
 
     //constructor estatico, inicializador estatico
     static {
@@ -159,6 +162,24 @@ public class Utility {
         return true;
     }
 
+    public static boolean validarEntradasQueueToStack(TextField tFieldPlace, ChoiceBox choiceBoxWh) {
+        String place = tFieldPlace.getText().trim();
+
+        if (!place.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
+            mostrarAlerta("El lugar solo debe contener letras y espacios.");
+            return false;
+        }
+
+        // Validar que se haya seleccionado un clima
+        if (choiceBoxWh.getValue() == null) {
+            mostrarAlerta("Debe seleccionar un clima.");
+            return false;
+        }
+
+        return true;
+    }
+
+
     public static boolean validarEntradasJobPos(TextField tfDescription, TextField tfHourlyWage) {
         String description = tfDescription.getText().trim();
         if (!description.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+")) {
@@ -187,7 +208,7 @@ public class Utility {
         }
     }
 
-    public static String getPlace(){
+    public static String randomGetPlace(){
         String places[] = {"San José", "Ciudad Quesada", "Paraíso",
                 "Turrialba", "Limón", "Liberia", "Puntarenas", "San Ramón", "Puerto Viejo", "Volcán Irazú", "Pérez Zeledón",
                 "Palmares", "Orotina", "El coco", "Ciudad Neilly", "Sixaola", "Guápiles","Siquirres"
@@ -197,11 +218,36 @@ public class Utility {
         return places[random(places.length-1)];
     }
 
-    public static String getWeather(){
+    public static String randomGetWeather(){
         String weather[] = {"rainy", "thunderstorm", "sunny", "cloudy", "foggy"};
 
         return weather[random(weather.length-1)];
     }
+
+    public static String[] getPlace(){
+        String places[] = {"San José", "Ciudad Quesada", "Paraíso",
+                "Turrialba", "Limón", "Liberia", "Puntarenas", "San Ramón", "Puerto Viejo", "Volcán Irazú", "Pérez Zeledón",
+                "Palmares", "Orotina", "El coco", "Ciudad Neilly", "Sixaola", "Guápiles","Siquirres"
+                , "El Guarco", "Cartago", "Santa Bárbara", "Jacó", "Manuel Antonio", "Quepos", "Santa Cruz",
+                "Nicoya"};
+
+        return places;
+    }
+
+    public static String[] getWeather(){
+        String weather[] = {"rainy", "thunderstorm", "sunny", "cloudy", "foggy"};
+
+        return weather;
+    }
+
+    public static Object getLinkedQueue(){
+        return queue;
+    }
+
+    public static void setLinkedQueue(LinkedQueue queue) {
+        Utility.queue = queue;
+    }
+
 }
 //    private ObservableList<List<String>> getEmployeeList() {
 //        ObservableList<List<String>> data = FXCollections.observableArrayList();

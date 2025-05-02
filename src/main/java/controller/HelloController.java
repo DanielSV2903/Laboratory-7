@@ -46,10 +46,8 @@ public class HelloController {
     }
 
     @FXML
-    public void queueToStackOnAction(ActionEvent actionEvent) {load("queueToStack.fxml");
-    }
+    public void queueToStackOnAction(ActionEvent actionEvent) {load("queueToStack.fxml");}
 
     @FXML
-    public void priorityQueueOnAction(ActionEvent actionEvent) {
-    }
+    public void priorityQueueOnAction(ActionEvent actionEvent) {load("priorityQueue.fxml");}
 }
