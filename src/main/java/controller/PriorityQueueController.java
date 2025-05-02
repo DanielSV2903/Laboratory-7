@@ -69,7 +69,7 @@ public class PriorityQueueController {
     public void enQueueOnAction(ActionEvent actionEvent) {
         String name=tfName.getText().trim();
         String mood=cBoxMood.getSelectionModel().getSelectedItem().trim();
-        priority=prioritySelection();
+        priority=prioritySelection(String.valueOf(cBoxPriority.getSelectionModel().getSelectedIndex()));
         int attentionTime=util.Utility.random(99);
         Person person=new Person(name,mood,attentionTime);
         priorityQueue.enQueue(person,priority);
@@ -84,21 +84,57 @@ public class PriorityQueueController {
         this.cBoxPriority.getSelectionModel().clearSelection();
         this.tfName.clear();
         this.tArea.setText("Atenttion process:");
+        priorityQueue.clear();
     }
 
     @javafx.fxml.FXML
     public void attentionProcessOnAction(ActionEvent actionEvent) {
+        StringBuilder builder=new StringBuilder();
+        builder.append(tArea.getText());
+        if (!priorityQueue.isEmpty()) {
+            Person person=(Person)priorityQueue.deQueue();
+            builder.append("\n"+person.getName()+", mood:"+person.getMood()+" fue atendido");
+        }
+        updateTableView();
+        tArea.setText(builder.toString());
     }
 
     @javafx.fxml.FXML
     public void autoEnQueueOnAction(ActionEvent actionEvent) {
-        ObservableList<List<String>> data=util.Utility.getAutoEnQueuePriorityRandom();
-//        tView.getItems().clear();
+        priorityQueue=Utility.generateRandomPersonsQueue();
+        data=getDataAutoEnQueue();
         tView.setItems(data);
     }
-    private int prioritySelection(){
+
+    private ObservableList<List<String>> getDataAutoEnQueue() {
+        ObservableList<List<String>> data = FXCollections.observableArrayList();
+        List<String> personPriorities=Utility.getPersonPriorities();
+        try {
+            PriorityLinkedQueue aux = new PriorityLinkedQueue();
+            int i = 0;
+            while (!priorityQueue.isEmpty() && i < personPriorities.size()) {
+                Person t = (Person) priorityQueue.deQueue();
+                List<String> arrayList = new ArrayList<>();
+                arrayList.add(t.getName());
+                arrayList.add(t.getMood());
+                arrayList.add(String.valueOf(t.getAttentionTime()));
+                arrayList.add(personPriorities.get(i)); // usar índice correcto
+                data.add(arrayList);
+                aux.enQueue(t);
+                i++;
+            }
+            while (!aux.isEmpty()) {
+                priorityQueue.enQueue(aux.deQueue());
+            }
+        } catch (QueueException ex) {
+            ex.printStackTrace(); // O manejar como tú prefieras
+        }
+
+        return data;
+    }
+
+    private int prioritySelection(String selection){
         int selectedIndex;
-        String selection=cBoxPriority.getSelectionModel().getSelectedItem();
         switch(selection){
             case "high":
                 selectedIndex=3;

@@ -270,8 +270,19 @@ public class Utility {
         return data;
     }
     private static List<String> personPriorities = new ArrayList<>();
+
+    public static List<String> getPersonPriorities() {
+        return personPriorities;
+    }
+
+    public static void setPersonPriorities(List<String> personPriorities) {
+        Utility.personPriorities = personPriorities;
+    }
+
     public static PriorityLinkedQueue generateRandomPersonsQueue() {
         PriorityLinkedQueue queue = new PriorityLinkedQueue();
+        personPriorities.clear();
+
         String moods = "Happiness,Sadness,Anger,Sickness,Cheerful,Reflective,Gloomy,Romantic,Calm,Hopeful,Fearful,Tense,Lonely";
         String[] array = moods.split(",");
         String[] names = {
@@ -282,33 +293,57 @@ public class Utility {
         };
         String[] priorities = {"high", "medium", "low"};
 
-        for (int i = 0; i < 20; i++) {
+        int count = 0;
+        while (count < 20) {
             String mood = array[Utility.random(array.length - 1)];
             String name = names[Utility.random(names.length - 1)];
             int aTime = Utility.random(99);
-            String priority = priorities[Utility.random(0, 2)];
-            personPriorities.add(priority);
+            String priority = priorities[Utility.random(priorities.length) - 1];
             int priorityInt = prioritySelection(priority);
             Person person = new Person(name, mood, aTime);
-            queue.enQueue(person, priorityInt);
+
+            if (reviewQueue(queue, person)) {
+                queue.enQueue(person, priorityInt);
+                personPriorities.add(priority);
+                count++;
+            }
         }
 
         return queue;
     }
+
+
+    private static boolean reviewQueue(PriorityLinkedQueue queue, Person person) {
+        PriorityLinkedQueue aux=new PriorityLinkedQueue();
+        boolean queueable=true;
+        while (!queue.isEmpty()){
+            Person p = (Person)queue.deQueue();
+            if (person.getMood().equals(p.getMood())&&person.getName().equals(p.getName())){
+                queueable=false;
+            }
+            aux.enQueue(p);
+        }
+        while (!aux.isEmpty()){
+            Person p = (Person)aux.deQueue();
+            queue.enQueue(p);
+        }
+        return queueable;
+    }
+
     public static ObservableList<List<String>> getAutoEnQueuePriorityRandom() {
         ObservableList<List<String>> data = FXCollections.observableArrayList();
         PriorityLinkedQueue queue = generateRandomPersonsQueue();
 
         try {
             PriorityLinkedQueue aux = new PriorityLinkedQueue();
-            int i=1;
-            while (!queue.isEmpty()&& i<personPriorities.size()) {
+            int i = 0;
+            while (!queue.isEmpty() && i < personPriorities.size()) {
                 Person t = (Person) queue.deQueue();
                 List<String> arrayList = new ArrayList<>();
                 arrayList.add(t.getName());
                 arrayList.add(t.getMood());
                 arrayList.add(String.valueOf(t.getAttentionTime()));
-                arrayList.add(personPriorities.get(i));
+                arrayList.add(personPriorities.get(i)); // usar índice correcto
                 data.add(arrayList);
                 aux.enQueue(t);
                 i++;
