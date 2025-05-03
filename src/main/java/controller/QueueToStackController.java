@@ -50,7 +50,6 @@ public class QueueToStackController {
         tColumnQueuePlace.setCellValueFactory(new PropertyValueFactory<>("place"));
         tColumnQueueWc.setCellValueFactory(new PropertyValueFactory<>("weather"));
 
-
     }
 
     @javafx.fxml.FXML
