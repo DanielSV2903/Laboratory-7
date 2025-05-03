@@ -193,8 +193,7 @@ public class PriorityQueueController {
                    i++;
                }
                while (!aux.isEmpty()){
-                   Person person = (Person) aux.deQueue();
-                   priorityQueue.enQueue(person);
+                   priorityQueue.enQueue(aux.deQueue());
                }
             } catch (QueueException ex) {
                 alert.setAlertType(Alert.AlertType.ERROR);
