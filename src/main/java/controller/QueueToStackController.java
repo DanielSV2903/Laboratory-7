@@ -102,9 +102,7 @@ public class QueueToStackController {
                 queue.enQueue(climate);
                 climateObservableList.add(climate);
 
-                //updateTableViewQueue();
                 mostrarAlerta("Entrada exitosamente", Alert.AlertType.INFORMATION);
-                btnClearOnAction(actionEvent);
             }
         }
     }
