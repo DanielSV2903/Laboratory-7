@@ -1,5 +1,6 @@
 package controller;
 
+import domain.person.Climate;
 import domain.person.Person;
 import domain.queue.PriorityLinkedQueue;
 import domain.queue.QueueException;
@@ -8,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import util.Utility;
 
@@ -39,13 +41,14 @@ public class PriorityQueueController {
     private PriorityLinkedQueue priorityQueue;
     private Alert alert;
     private int priority;
-    private ObservableList<List<String>> data;
-    private List<String> prioritiesOrder;
 
+    private List<String> personPriorities;
+
+    private ObservableList<List<String>> data;
     @javafx.fxml.FXML
     public void initialize() {
-        prioritiesOrder = Utility.getPersonPriorities();
         alert = new Alert(Alert.AlertType.INFORMATION);
+        personPriorities = new ArrayList<>();
         this.priorityQueue = new PriorityLinkedQueue();
         data = getData();
         this.cBoxPriority.setItems(util.Utility.getPriorityData());
@@ -70,38 +73,11 @@ public class PriorityQueueController {
     public void enQueueOnAction(ActionEvent actionEvent) {
         String name=tfName.getText().trim();
         String mood=cBoxMood.getSelectionModel().getSelectedItem().trim();
-        String selection= String.valueOf(cBoxPriority.getSelectionModel().getSelectedItem());
-        priority=prioritySelection(selection);
+        personPriorities.add(cBoxPriority.getSelectionModel().getSelectedItem().trim());
         int attentionTime=util.Utility.random(99);
         Person person=new Person(name,mood,attentionTime);
-        if (queueValidation(person)){
-            priorityQueue.enQueue(person,priority);
-            prioritiesOrder.add(selection);
-        }else {
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Ingrese una persona no repetida");
-            alert.showAndWait();
-        }
+        priorityQueue.enQueue(person,priority);
         updateTableView();
-    }
-
-    private boolean queueValidation(Person person) {
-        PriorityLinkedQueue aux = new PriorityLinkedQueue();
-        boolean queueAble=true;
-        while (!priorityQueue.isEmpty()) {
-            Person p= (Person) priorityQueue.deQueue();
-            if (person.getMood().equals(p.getMood())&&person.getName().equals(p.getName())) {
-                queueAble=false;
-            }
-            aux.enQueue(p);
-        }
-        while (!aux.isEmpty()) {
-            Person p= (Person) aux.deQueue();
-            priorityQueue.enQueue(p);
-        }
-        return queueAble;
     }
 
 
@@ -129,25 +105,25 @@ public class PriorityQueueController {
 
     @javafx.fxml.FXML
     public void autoEnQueueOnAction(ActionEvent actionEvent) {
-        generateAutoEnqueue(20);
+        priorityQueue=Utility.generateRandomPersonsQueue();
+        personPriorities.clear();
         data=getDataAutoEnQueue();
         tView.setItems(data);
     }
 
     private ObservableList<List<String>> getDataAutoEnQueue() {
         ObservableList<List<String>> data = FXCollections.observableArrayList();
-        prioritiesOrder=Utility.getPersonPriorities();
+        personPriorities.addAll(Utility.getPersonPriorities());
         try {
             PriorityLinkedQueue aux = new PriorityLinkedQueue();
             int i = 0;
-            while (!priorityQueue.isEmpty() && i < prioritiesOrder.size()) {
+            while (!priorityQueue.isEmpty() && i < personPriorities.size()) {
                 Person t = (Person) priorityQueue.deQueue();
                 List<String> arrayList = new ArrayList<>();
                 arrayList.add(t.getName());
                 arrayList.add(t.getMood());
                 arrayList.add(String.valueOf(t.getAttentionTime()));
-                sortPriorities(prioritiesOrder);
-                arrayList.add(prioritiesOrder.get(i)); // usar índice correcto
+                arrayList.add(personPriorities.get(i)); // usar índice correcto
                 data.add(arrayList);
                 aux.enQueue(t);
                 i++;
@@ -156,25 +132,12 @@ public class PriorityQueueController {
                 priorityQueue.enQueue(aux.deQueue());
             }
         } catch (QueueException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(); // O manejar como tú prefieras
         }
 
         return data;
     }
 
-    private void sortPriorities(List<String> personPriorities) {
-        personPriorities.sort((p1, p2) -> {
-            return getPriorityValue(p1) - getPriorityValue(p2);
-        });
-    }
-    private int getPriorityValue(String priority) {//invierte las prioridades para que el parametro del sort funcione
-        return switch (priority.toLowerCase()) {
-            case "high" -> 0;
-            case "medium" -> 1;
-            case "low" -> 2;
-            default -> Integer.MAX_VALUE;
-        };
-    }
     private int prioritySelection(String selection){
         int selectedIndex;
         switch(selection){
@@ -193,6 +156,14 @@ public class PriorityQueueController {
         }
         return selectedIndex;
     };
+    private String priorityString(){
+        return switch (priority) {
+            case 1 -> "low";
+            case 2 -> "medium";
+            case 3 -> "high";
+            default -> " ";
+        };
+    }
 
     private void updateTableView() throws QueueException {
         this.tView.getItems().clear(); //clear table
@@ -205,25 +176,25 @@ public class PriorityQueueController {
 
     private ObservableList<List<String>> getData() {
         ObservableList<List<String>> data = FXCollections.observableArrayList();
+        personPriorities.addAll(Utility.getPersonPriorities());
         if(priorityQueue!=null &&!priorityQueue.isEmpty()){
             try {
-                PriorityLinkedQueue aux = new PriorityLinkedQueue();
-                int i = 0;
-                while (!priorityQueue.isEmpty() && i < prioritiesOrder.size()) {
-                    Person t = (Person) priorityQueue.deQueue();
-                    List<String> arrayList = new ArrayList<>();
-                    arrayList.add(t.getName());
-                    arrayList.add(t.getMood());
-                    arrayList.add(String.valueOf(t.getAttentionTime()));
-                    sortPriorities(prioritiesOrder);
-                    arrayList.add(prioritiesOrder.get(i));
-                    data.add(arrayList);
-                    aux.enQueue(t);
-                    i++;
-                }
-                while (!aux.isEmpty()) {
-                    priorityQueue.enQueue(aux.deQueue());
-                }
+               PriorityLinkedQueue aux = new PriorityLinkedQueue();
+               int i = 0;
+               while (!priorityQueue.isEmpty()){
+                   Person person = (Person) priorityQueue.deQueue();
+                   List<String> arrayList = new ArrayList<>();
+                   arrayList.add(person.getName());
+                   arrayList.add(person.getMood());
+                   arrayList.add(String.valueOf(person.getAttentionTime()));
+                   arrayList.add(personPriorities.get(i));
+                   data.add(arrayList);
+                   aux.enQueue(person);
+                   i++;
+               }
+               while (!aux.isEmpty()){
+                   priorityQueue.enQueue(aux.deQueue());
+               }
             } catch (QueueException ex) {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setContentText("There was an error in the process");
@@ -232,21 +203,5 @@ public class PriorityQueueController {
             }
         }
         return data;
-    }
-    private void generateAutoEnqueue(int count) {
-        priorityQueue.clear();
-        prioritiesOrder.clear();
-        for (int i = 0; i < count; i++) {
-            String name = Utility.generateRandomName();
-            String mood = Utility.getRandomMood();
-            int attentionTime = Utility.random(99);
-            String priorityStr = Utility.getRandomPriority();
-
-            int priority = prioritySelection(priorityStr);
-
-            Person person = new Person(name, mood, attentionTime);
-            priorityQueue.enQueue(person, priority);
-            prioritiesOrder.add(priorityStr);
-        }
     }
 }

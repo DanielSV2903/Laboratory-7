@@ -5,15 +5,14 @@ import domain.person.Place;
 import domain.person.Weather;
 import domain.queue.LinkedQueue;
 import domain.queue.QueueException;
+import domain.stack.LinkedStack;
+import domain.stack.StackException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import util.Utility;
-
-import java.util.LinkedList;
 
 public class QueueToStackController {
     @javafx.fxml.FXML
@@ -39,16 +38,24 @@ public class QueueToStackController {
     private Alert alert;
     private LinkedQueue queue;
     private ObservableList<Climate> climateObservableList;
+    private LinkedStack stack;
+    private boolean showingQueue;
 
     @javafx.fxml.FXML
     public void initialize() {
         this.queue = new LinkedQueue();
+        this.stack = new LinkedStack();
         ObservableList<String> weatherData = FXCollections.observableArrayList(util.Utility.getWeather());
         climateObservableList = FXCollections.observableArrayList();
         tViewQueue.setItems(climateObservableList);
         this.choiceBoxWh.setItems(weatherData);
         tColumnQueuePlace.setCellValueFactory(new PropertyValueFactory<>("place"));
         tColumnQueueWc.setCellValueFactory(new PropertyValueFactory<>("weather"));
+        tColumnStackPlace.setCellValueFactory(new PropertyValueFactory<>("place"));
+        tColumnStackWc.setCellValueFactory(new PropertyValueFactory<>("weather"));
+        this.showingQueue = true;
+
+
 
     }
 
@@ -84,7 +91,50 @@ public class QueueToStackController {
 
     @javafx.fxml.FXML
     public void btnToOnAction(ActionEvent actionEvent) {
+        try {
+            if (showingQueue) {
+                //queue to stack
+                stack = new LinkedStack();
+                LinkedQueue auxQueue = new LinkedQueue();
+
+
+                while (!queue.isEmpty()) {
+                    Climate climate = (Climate) queue.deQueue();
+                    stack.push(climate);//se pasa el queue a stack
+                    auxQueue.enQueue(climate);//se guarda la lista og
+                }
+
+                //restaurar cola og
+                while (!auxQueue.isEmpty())
+                    queue.enQueue(auxQueue.deQueue());
+
+
+                updateTableViewQueue();
+                showingQueue = false;
+            } else {
+                //stack a queue
+                queue = new LinkedQueue();
+                LinkedStack auxStack = new LinkedStack();
+
+                while (!stack.isEmpty()) {
+                    Climate climate = (Climate) stack.pop();
+                    stack.push(climate);
+                }
+
+                while (!auxStack.isEmpty()) {
+                    Climate climate = (Climate) auxStack.pop();
+                    queue.enQueue(climate);
+                    stack.push(climate);
+                }
+
+                updateTableViewQueue();
+                showingQueue = true;
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error al transferir de queue a stack", Alert.AlertType.ERROR);
+        }
     }
+
 
     @javafx.fxml.FXML
     public void enQueueOnAction(ActionEvent actionEvent) {
@@ -147,6 +197,27 @@ public class QueueToStackController {
                 }
 
             } catch (QueueException e) {
+                mostrarAlerta("Error al actualizar la tabla", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    private void updateTableViewStack() {
+        tViewStack.getItems().clear();
+
+        if (stack != null && !stack.isEmpty()) {
+            try{
+                LinkedStack aux = new LinkedStack();
+                while (!stack.isEmpty()) {
+                    Climate climate = (Climate) stack.pop();
+                    tViewStack.getItems().add(climate);
+                    aux.push(climate);
+                }
+
+                while (!aux.isEmpty()) {
+                    stack.push(aux.pop());
+                }
+            } catch (StackException e) {
                 mostrarAlerta("Error al actualizar la tabla", Alert.AlertType.ERROR);
             }
         }
