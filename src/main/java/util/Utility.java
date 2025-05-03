@@ -282,6 +282,68 @@ public class Utility {
         Utility.personPriorities = personPriorities;
     }
 
+    public static PriorityLinkedQueue generateRandomPersonsQueue() {
+        PriorityLinkedQueue queue = new PriorityLinkedQueue();
+        personPriorities.clear();
+
+        String moods = "Happiness,Sadness,Anger,Sickness,Cheerful,Reflective,Gloomy,Romantic,Calm,Hopeful,Fearful,Tense,Lonely";
+        String[] array = moods.split(",");
+        String[] names = {
+                "José", "María", "Juan", "Carmen", "Luis",
+                "Ana", "Carlos", "Isabel", "Miguel", "Laura",
+                "Pedro", "Elena", "Jorge", "Rosa", "Francisco",
+                "Patricia", "Antonio", "Lucía", "Manuel", "Marta"
+        };
+        String[] priorities = {"high", "medium", "low"};
+
+        int count = 0;
+        while (count < 20) {
+            String mood = array[Utility.random(array.length - 1)];
+            String name = names[Utility.random(names.length - 1)];
+            int aTime = Utility.random(99);
+            String priority = priorities[Utility.random(priorities.length) - 1];
+            int priorityInt = prioritySelection(priority);
+            Person person = new Person(name, mood, aTime);
+
+            if (reviewQueue(queue, person)) {
+                queue.enQueue(person, priorityInt);
+                personPriorities.add(priority);
+                count++;
+            }
+        }
+
+        return queue;
+    }
+
+
+    public static ObservableList<List<String>> getAutoEnQueuePriorityRandom() {
+        ObservableList<List<String>> data = FXCollections.observableArrayList();
+        PriorityLinkedQueue queue = generateRandomPersonsQueue();
+
+        try {
+            PriorityLinkedQueue aux = new PriorityLinkedQueue();
+            int i = 0;
+            while (!queue.isEmpty() && i < personPriorities.size()) {
+                Person t = (Person) queue.deQueue();
+                List<String> arrayList = new ArrayList<>();
+                arrayList.add(t.getName());
+                arrayList.add(t.getMood());
+                arrayList.add(String.valueOf(t.getAttentionTime()));
+                arrayList.add(personPriorities.get(i)); // usar índice correcto
+                data.add(arrayList);
+                aux.enQueue(t);
+                i++;
+            }
+            while (!aux.isEmpty()) {
+                queue.enQueue(aux.deQueue());
+            }
+        } catch (QueueException ex) {
+            ex.printStackTrace(); // O manejar como tú prefieras
+        }
+
+        return data;
+    }
+
     public static ObservableList<Climate> generateRandomClimateQueue() {
         ObservableList<Climate> climates = FXCollections.observableArrayList();
 
@@ -371,6 +433,13 @@ public class Utility {
         return priorities[random(priorities.length)-1];
     }
 }
+
+
+
+
+
+
+
 //    private ObservableList<List<String>> getEmployeeList() {
 //        ObservableList<List<String>> data = FXCollections.observableArrayList();
 //        if(employeeList!=null &&!employeeList.isEmpty()){

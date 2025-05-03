@@ -1,8 +1,10 @@
 package domain;
 
+import domain.person.Person;
 import domain.queue.ArrayQueue;
 import domain.queue.QueueException;
 import org.junit.jupiter.api.Test;
+import util.Utility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,11 +89,39 @@ class ArrayQueueTest {
     void test(){
         ArrayQueue arrayQueue = new ArrayQueue(20);
         try {
-            for (int i = 0; i < 15; i++)
-                arrayQueue.enQueue((util.Utility.random(30)));
+            enQueueRandomPersons(arrayQueue,20);
             System.out.println(arrayQueue);
+            System.out.println("Tamaño de la cola: "+arrayQueue.size());
+            for (int i = 0; i < 20; i++) {
+                String name = Utility.generateRandomName();
+                String mood = Utility.getRandomMood();
+                int attentionTime = Utility.random(99);
+                Person person = new Person(name, mood, attentionTime);
+                System.out.println(arrayQueue.contains(person)?person+" fue encontrado en el indice: "+arrayQueue.indexOf(person):person+" no fue encontrado");
+            }
+            ArrayQueue aux= new ArrayQueue(arrayQueue.size());
+            while (!arrayQueue.isEmpty()) {
+                Person person= (Person) arrayQueue.deQueue();
+                if (!person.getMood().equals("Cheerful"))
+                    aux.enQueue(person);
+            }
+            while (!aux.isEmpty()){
+                Person person= (Person) aux.deQueue();
+                arrayQueue.enQueue(person);
+            }
+            System.out.println("\n"+arrayQueue+"\n"+arrayQueue.size());
         } catch (QueueException q) {
             throw new RuntimeException();
+        }
+    }
+    private void enQueueRandomPersons(ArrayQueue queue,int count){
+        for (int i = 0; i < count; i++) {
+            String name = Utility.generateRandomName();
+            String mood = Utility.getRandomMood();
+            int attentionTime = Utility.random(99);
+            Person person = new Person(name, mood, attentionTime);
+            queue.enQueue(person);
+
         }
     }
 }
