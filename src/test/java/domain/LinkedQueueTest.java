@@ -147,28 +147,34 @@ class LinkedQueueTest {
         System.out.println("___With duplicates"+linkedQueue);
         removeDuplicates(linkedQueue);
         System.out.println("___Without duplicates"+linkedQueue);
-
-
-
-
     }
 
     void removeDuplicates(LinkedQueue queue){
         LinkedQueue aux = new LinkedQueue();
-        for (int i = 0; i<queue.size(); i++){
-            int a = i;
-            while (a>0){
-                aux.enQueue(queue.deQueue());
-                a--;
-            }
-            Object auxOb = queue.front();
-            while (!queue.isEmpty()){
-                aux.enQueue(queue.deQueue());
-                if (util.Utility.compare(auxOb, queue.front())==0){
-                    queue.deQueue();
+
+        while (!queue.isEmpty()){
+            Object current = queue.deQueue();
+            boolean areDuplicates = false;
+
+            for (int i = 0; i < 20; i++){
+                Object temp = aux.deQueue();
+
+                if (temp.equals(current)){
+                    areDuplicates = true;
                 }
+                aux.enQueue(temp);
             }
-            queue = aux;
+
+            if(!areDuplicates){
+                aux.enQueue(current);
+            }
+
+
+        }
+
+
+        while (!aux.isEmpty()){
+            queue.enQueue(aux.deQueue());
         }
     }
 
