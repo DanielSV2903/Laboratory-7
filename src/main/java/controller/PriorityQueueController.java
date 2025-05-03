@@ -71,13 +71,24 @@ public class PriorityQueueController {
 
     @javafx.fxml.FXML
     public void enQueueOnAction(ActionEvent actionEvent) {
-        String name=tfName.getText().trim();
-        String mood=cBoxMood.getSelectionModel().getSelectedItem().trim();
-        personPriorities.add(cBoxPriority.getSelectionModel().getSelectedItem().trim());
-        int attentionTime=util.Utility.random(99);
-        Person person=new Person(name,mood,attentionTime);
-        priorityQueue.enQueue(person,priority);
-        updateTableView();
+        try {
+        if (tfName.getText().isEmpty() || cBoxMood.getSelectionModel().getSelectedItem() == null || cBoxPriority.getSelectionModel().getSelectedItem() == null) {
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText("Asegurese de haber llenado todos los espacios solicitados");
+            alert.showAndWait();
+        } else {
+            String name=tfName.getText().trim();
+            String mood=cBoxMood.getSelectionModel().getSelectedItem().trim();
+            personPriorities.add(cBoxPriority.getSelectionModel().getSelectedItem().trim());
+            int attentionTime=util.Utility.random(99);
+            Person person=new Person(name,mood,attentionTime);
+            priorityQueue.enQueue(person,priority);
+            updateTableView();
+        }
+        } catch (QueueException e) {
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+        }
     }
 
 

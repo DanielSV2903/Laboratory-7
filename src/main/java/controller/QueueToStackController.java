@@ -54,9 +54,6 @@ public class QueueToStackController {
         tColumnStackPlace.setCellValueFactory(new PropertyValueFactory<>("place"));
         tColumnStackWc.setCellValueFactory(new PropertyValueFactory<>("weather"));
         this.showingQueue = true;
-
-
-
     }
 
     @javafx.fxml.FXML
@@ -64,9 +61,9 @@ public class QueueToStackController {
         this.tFieldPlace.clear();
         this.choiceBoxWh.getSelectionModel().clearSelection();
         queue.clear();
+        stack.clear();
         updateTableViewQueue();
-
-
+        updateTableViewStack();
     }
 
     @javafx.fxml.FXML
@@ -86,39 +83,37 @@ public class QueueToStackController {
         } catch (QueueException e) {
             mostrarAlerta("Hubo un error", Alert.AlertType.ERROR);
         }
-
     }
 
     @javafx.fxml.FXML
     public void btnToOnAction(ActionEvent actionEvent) {
         try {
             if (showingQueue) {
-                //queue to stack
+                //queue a stack
                 stack = new LinkedStack();
                 LinkedQueue auxQueue = new LinkedQueue();
 
-
                 while (!queue.isEmpty()) {
                     Climate climate = (Climate) queue.deQueue();
-                    stack.push(climate);//se pasa el queue a stack
-                    auxQueue.enQueue(climate);//se guarda la lista og
+                    stack.push(climate);
+                    auxQueue.enQueue(climate);
                 }
 
-                //restaurar cola og
-                while (!auxQueue.isEmpty())
+                while (!auxQueue.isEmpty()) {
                     queue.enQueue(auxQueue.deQueue());
+                }
 
-
+                updateTableViewStack();
+                queue.clear();
                 updateTableViewQueue();
                 showingQueue = false;
             } else {
                 //stack a queue
-                queue = new LinkedQueue();
                 LinkedStack auxStack = new LinkedStack();
 
                 while (!stack.isEmpty()) {
                     Climate climate = (Climate) stack.pop();
-                    stack.push(climate);
+                    auxStack.push(climate);
                 }
 
                 while (!auxStack.isEmpty()) {
@@ -128,13 +123,14 @@ public class QueueToStackController {
                 }
 
                 updateTableViewQueue();
+                stack.clear();
+                updateTableViewStack();
                 showingQueue = true;
             }
         } catch (Exception e) {
-            mostrarAlerta("Error al transferir de queue a stack", Alert.AlertType.ERROR);
+            mostrarAlerta("Error en la transferencia", Alert.AlertType.ERROR);
         }
     }
-
 
     @javafx.fxml.FXML
     public void enQueueOnAction(ActionEvent actionEvent) {
